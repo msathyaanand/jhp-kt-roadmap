@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>KT Roadmap Checklist</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #f6f8fa;
+      --container-bg: #fff;
+      --text: #222;
+      --section-bg: #f4f4f4;
+      --highlight: #ffe066;
+      --checkbox: #ffd600;
+      --subsection-bg: #e2eafc;
+      --border: #bbb;
+      --shadow: 0 8px 32px rgba(60,60,100,0.12);
+      --progress-bar: #e74c3c;
+      --progress-bg: #ececec;
+      --btn-blue: #3498db;
+      --btn-red: #e74c3c;
+      --btn-green: #2ecc40;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 30px 0;
+      transition: background 0.3s, color 0.3s;
+    }
+
+body.dark #searchInput,
+body.dark #searchInput:focus,
+body.dark #searchInput:hover {
+  background: #282d33 !important;
+  color: #ffe066 !important;
+  border: 1px solid #444 !important;
+}
+
+body.dark .summary-title,
+body.dark .summary-value {
+  color: #ffe066 !important;
+}
+body.dark tr:hover td {
+  background-color: #333 !important;   /* or another dark shade */
+  color: #ffe066 !important;           /* or #fff for white text */
+  transition: background 0.2s, color 0.2s;
+}
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: var(--container-bg);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 32px 24px 24px 24px;
+      position: relative;
+    }
+    h1 {
+      text-align: center;
+      color: var(--text);
+      margin-bottom: 18px;
+    }
+    .date-bar {
+      text-align: right;
+      color: #888;
+      font-size: 1em;
+      margin-bottom: 8px;
+    }
+    .theme-toggle {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .theme-toggle label {
+      cursor: pointer;
+      font-size: 1.1em;
+      color: var(--text);
+    }
+    .toggle-switch {
+      width: 46px;
+      height: 26px;
+      background: #ccc;
+      border-radius: 13px;
+      position: relative;
+      transition: background 0.3s;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.3s;
+      box-shadow: 0 1px 2px rgba(60,60,100,0.10);
+    }
+    .toggle-switch input:checked + .slider {
+      transform: translateX(20px);
+      background: #222;
+    }
+    .toggle-switch input:checked ~ .toggle-switch {
+      background: #222;
+    }
+    .toggle-switch input:checked ~ label {
+      color: #fff;
+    }
+    .search-bar {
+      width: 100%;
+      max-width: 350px;
+      margin: 0 auto 18px auto;
+      display: flex;
+      justify-content: center;
+    }
+    #searchInput {
+      width: 100%;
+      font-size: 1.1em;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      margin-bottom: 10px;
+      background: #f9f9f9;
+      color: var(--text);
+    }
+    /* Summary and Progress Bar */
+    .summary-progress-container {
+      margin: 18px 0 24px 0;
+    }
+    .summary-cards {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    .summary-card {
+      background: #f4f4f4;
+      border-radius: 8px;
+      flex: 1 1 0;
+      min-width: 150px;
+      text-align: center;
+      padding: 18px 0 8px 0;
+      box-shadow: 0 1px 4px rgba(60,60,100,0.07);
+    }
+    .summary-title {
+      color: #3a3a5a;
+      font-size: 1.1em;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .summary-value {
+      font-size: 2em;
+      font-weight: bold;
+      color: #222;
+    }
+    .progress-bar-outer {
+      width: 100%;
+      background: var(--progress-bg);
+      border-radius: 6px;
+      height: 26px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+    .progress-bar-inner {
+      height: 100%;
+      background: var(--progress-bar);
+      color: #fff;
+      font-weight: bold;
+      font-size: 1em;
+      text-align: center;
+      line-height: 26px;
+      transition: width 0.3s;
+      position: relative;
+    }
+    #progressBarLabel {
+      position: absolute;
+      left: 0; right: 0;
+      top: 0; bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Checklist Table */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--container-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(60,60,100,0.06);
+    }
+    th, td {
+      padding: 14px 12px;
+      text-align: left;
+    }
+    th {
+      background: var(--highlight);
+      color: var(--text);
+      font-size: 1.08em;
+      font-weight: bold;
+      border-bottom: 2px solid #f5c518;
+    }
+    td {
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 1em;
+      vertical-align: middle;
+    }
+    tr.section-row td {
+      background: var(--section-bg);
+      font-weight: bold;
+      color: var(--text);
+      border-top: 2px solid #e2e2e2;
+      border-bottom: 2px solid #e2e2e2;
+      font-size: 1.06em;
+    }
+    tr.subsection-row td {
+      background: var(--subsection-bg);
+      font-style: italic;
+      color: #3a3a5a;
+    }
+    tr:not(.section-row):not(.subsection-row):hover td {
+      background: #f9fafb;
+      transition: background 0.2s;
+    }
+    .check-cell {
+      text-align: center;
+    }
+    input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      accent-color: var(--checkbox);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: box-shadow 0.2s;
+      box-shadow: 0 1px 2px rgba(60,60,100,0.10);
+    }
+    /* Buttons */
+    .button-bar {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin: 32px 0 0 0;
+    }
+    .action-btn {
+      font-size: 1.1em;
+      font-weight: 500;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 6px rgba(60,60,100,0.08);
+      outline: none;
+    }
+    .btn-blue { background: var(--btn-blue);}
+    .btn-blue:hover { background: #2179b8;}
+    .btn-red { background: var(--btn-red);}
+    .btn-red:hover { background: #b93a2b;}
+    .btn-green { background: var(--btn-green);}
+    .btn-green:hover { background: #169c27;}
+    /* Milestone and Confetti */
+    .milestone {
+      display: none;
+      position: fixed;
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fffbe6;
+      color: #222;
+      border: 2px solid #ffd600;
+      border-radius: 18px;
+      padding: 30px 40px;
+      font-size: 1.5em;
+      font-weight: bold;
+      z-index: 1001;
+      box-shadow: 0 8px 32px rgba(60,60,100,0.18);
+      text-align: center;
+      animation: popin 0.5s;
+    }
+    @keyframes popin {
+      0% { transform: translate(-50%, -60%) scale(0.7);}
+      100% { transform: translate(-50%, -50%) scale(1);}
+    }
+    .confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1000;
+      overflow: hidden;
+    }
+    .confetti-piece {
+      position: absolute;
+      font-size: 2em;
+      will-change: transform, opacity;
+      animation: confetti-fall 1.5s linear forwards;
+    }
+    @keyframes confetti-fall {
+      0% { opacity: 1; transform: translateY(-40px) rotate(0deg);}
+      100% { opacity: 0; transform: translateY(100vh) rotate(360deg);}
+    }
+    @media (max-width: 700px) {
+      .container { padding: 8px; }
+      table, thead, tbody, th, td, tr { display: block; }
+      th, td { width: 100%; box-sizing: border-box; }
+      tr { margin-bottom: 10px; }
+      th { border-radius: 0; }
+      .theme-toggle { position: static; margin-bottom: 10px; }
+      .summary-cards { flex-direction: column; gap: 8px;}
+      .button-bar { flex-direction: column; gap: 10px;}
+    }
+    /* Dark mode styles */
+    body.dark {
+      --bg: #181a1b;
+      --container-bg: #23272a;
+      --text: #f1f1f1;
+      --section-bg: #22282a;
+      --highlight: #bfae44;
+      --checkbox: #bfae44;
+      --subsection-bg: #2d3748;
+      --border: #444;
+      --progress-bar: #b93a2b;
+      --progress-bg: #22282a;
+    }
+    body.dark .milestone {
+      background: #22282a;
+      color: #ffe066;
+      border: 2px solid #ffe066;
+    }
+    body.dark #searchInput {
+      background: #23272a;
+      color: #ffe066;
+      border: 1px solid #444;
+    }
+    body.dark .summary-card {
+      background: #22282a;
+      color: #ffe066;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Theme Toggle -->
+    <div class="theme-toggle">
+      <div class="toggle-switch">
+        <input type="checkbox" id="themeSwitch" />
+        <span class="slider"></span>
+      </div>
+      <label for="themeSwitch" id="themeLabel">🌞 Light</label>
+    </div>
+    <!-- Date Bar -->
+    <div class="date-bar" id="dateBar"></div>
+    <h1>JHP KT Roadmap : Mastech Support</h1>
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search checklist...">
+    </div>
+
+    <!-- Summary and Progress Bar -->
+    <div class="summary-progress-container">
+      <div class="summary-cards">
+        <div class="summary-card">
+          <div class="summary-title">Total Items</div>
+          <div class="summary-value" id="totalItems">0</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-title">Completed</div>
+          <div class="summary-value" id="completedItems">0</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-title">Remaining</div>
+          <div class="summary-value" id="remainingItems">0</div>
+        </div>
+      </div>
+      <div class="progress-bar-outer">
+        <div class="progress-bar-inner" id="progressBarInner" style="width:0%">
+          <span id="progressBarLabel">0%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Milestone Message -->
+    <div class="milestone" id="milestoneMsg"></div>
+    <!-- Confetti Container -->
+    <div class="confetti" id="confetti"></div>
+    <!-- Checklist Table -->
+    <table id="ktTable">
+      <thead>
+        <tr>
+          <th>Section</th>
+          <th>Subsection</th>
+          <th>Checklist Item</th>
+          <th>Done (✔/✗)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Basic Monitoring -->
+        <tr class="section-row"><td>Basic Monitoring</td><td></td><td></td><td></td></tr>
+        <tr>
+          <td></td>
+          <td>Queue Monitoring</td>
+          <td>Regularly check Failure Queue for failed jobs and take action</td>
+          <td class="check-cell"><input type="checkbox" data-id="0"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Queue Monitoring</td>
+          <td>Monitor Long Running/Active Queue for stuck or slow jobs</td>
+          <td class="check-cell"><input type="checkbox" data-id="1"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Queue Monitoring</td>
+          <td>Identify and resolve jobs in Blocked Queue</td>
+          <td class="check-cell"><input type="checkbox" data-id="2"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Communication Channels</td>
+          <td>Monitor Outlook mails for project updates, alerts, and escalations</td>
+          <td class="check-cell"><input type="checkbox" data-id="3"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Communication Channels</td>
+          <td>Track and respond to ServiceNow tickets</td>
+          <td class="check-cell"><input type="checkbox" data-id="4"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Tracking & Documentation</td>
+          <td>Update Access DB Tracker with job status, issues, and resolutions</td>
+          <td class="check-cell"><input type="checkbox" data-id="5"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Tracking & Documentation</td>
+          <td>Provide hourly updates (every 2 hours) in Teams chat</td>
+          <td class="check-cell"><input type="checkbox" data-id="6"></td>
+        </tr>
+        <!-- Failure Steps & Incident Management -->
+        <tr class="section-row"><td>Failure Steps & Incident Management</td><td></td><td></td><td></td></tr>
+        <tr>
+          <td></td>
+          <td>Types of Failures</td>
+          <td>Identify, troubleshoot, and resolve SFTP/Batch failures</td>
+          <td class="check-cell"><input type="checkbox" data-id="7"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Types of Failures</td>
+          <td>Handle UST process failures</td>
+          <td class="check-cell"><input type="checkbox" data-id="8"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Types of Failures</td>
+          <td>Escalate and resolve EDW/MDM team failures</td>
+          <td class="check-cell"><input type="checkbox" data-id="9"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Types of Failures</td>
+          <td>Address DAR failures, use standard mail templates</td>
+          <td class="check-cell"><input type="checkbox" data-id="10"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Incident Creation/Response</td>
+          <td>Document and analyze root cause of failures</td>
+          <td class="check-cell"><input type="checkbox" data-id="11"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Incident Creation/Response</td>
+          <td>Notify stakeholders using predefined templates</td>
+          <td class="check-cell"><input type="checkbox" data-id="12"></td>
+        </tr>
+        <!-- Important Job Monitoring & Timings -->
+        <tr class="section-row"><td>Important Job Monitoring & Timings</td><td></td><td></td><td></td></tr>
+        <tr>
+          <td></td>
+          <td>Key Workflows & Schedules</td>
+          <td>Monitor CAID workflow (file names, timing details)</td>
+          <td class="check-cell"><input type="checkbox" data-id="13"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Key Workflows & Schedules</td>
+          <td>Monitor CHIP workflow (file names, timing details)</td>
+          <td class="check-cell"><input type="checkbox" data-id="14"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Key Workflows & Schedules</td>
+          <td>Monitor Feeder PM/AM processes (timing and procedures)</td>
+          <td class="check-cell"><input type="checkbox" data-id="15"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Key Workflows & Schedules</td>
+          <td>Monitor Saturday CAID/CHIP workflows (timing details)</td>
+          <td class="check-cell"><input type="checkbox" data-id="16"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Key Workflows & Schedules</td>
+          <td>Follow CAID/CHIP file missing procedures</td>
+          <td class="check-cell"><input type="checkbox" data-id="17"></td>
+        </tr>
+        <!-- Workflow Management -->
+        <tr class="section-row"><td>Workflow Management</td><td></td><td></td><td></td></tr>
+        <tr>
+          <td></td>
+          <td>Job Control</td>
+          <td>Hold/Remove BP from the job as needed</td>
+          <td class="check-cell"><input type="checkbox" data-id="18"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Job Control</td>
+          <td>Make workflow Active/Inactive as required</td>
+          <td class="check-cell"><input type="checkbox" data-id="19"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Scheduling</td>
+          <td>Check and adjust workflow schedule times</td>
+          <td class="check-cell"><input type="checkbox" data-id="20"></td>
+        </tr>
+        <!-- Additional Resources & Best Practices -->
+        <tr class="section-row"><td>Additional Resources & Best Practices</td><td></td><td></td><td></td></tr>
+        <tr>
+          <td></td>
+          <td>Documentation</td>
+          <td>Maintain updated documentation for all processes</td>
+          <td class="check-cell"><input type="checkbox" data-id="21"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Training</td>
+          <td>Conduct regular knowledge sharing and training sessions</td>
+          <td class="check-cell"><input type="checkbox" data-id="22"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Escalation Matrix</td>
+          <td>Maintain escalation matrix with contacts and escalation paths</td>
+          <td class="check-cell"><input type="checkbox" data-id="23"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Action Buttons -->
+    <div class="button-bar">
+      <button class="action-btn btn-blue" id="saveBtn">Save Progress</button>
+      <button class="action-btn btn-red" id="resetBtn">Reset All</button>
+      <button class="action-btn btn-green" id="exportBtn">Export to CSV</button>
+    </div>
+  </div>
+  <script>
+    // --- Date Bar ---
+   // document.getElementById('dateBar').textContent =
+     // 'Thursday, May 08, 2025, 2:05 PM IST';
+
+    // --- Dark/Light Mode Toggle ---
+    const themeSwitch = document.getElementById('themeSwitch');
+    const themeLabel = document.getElementById('themeLabel');
+    function setTheme(mode) {
+      if (mode === 'dark') {
+        document.body.classList.add('dark');
+        themeSwitch.checked = true;
+        themeLabel.textContent = '🌙';
+      } else {
+        document.body.classList.remove('dark');
+        themeSwitch.checked = false;
+        themeLabel.textContent = '🌞 ';
+      }
+    }
+    themeSwitch.addEventListener('change', function() {
+      if (this.checked) {
+        setTheme('dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        setTheme('light');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+    setTheme(localStorage.getItem('theme') || 'light');
+
+    // --- Checklist State ---
+    const TOTAL_ITEMS = 24;
+    function updateMilestone() {
+      const completed = Array.from(document.querySelectorAll('input[type="checkbox"][data-id]'))
+        .filter(cb => cb.checked).length;
+      const percent = Math.round((completed / TOTAL_ITEMS) * 100);
+      if (percent === 50 || percent === 100) {
+        showMilestone(percent);
+        showConfetti();
+      }
+    }
+    function updateSummary() {
+      const checkboxes = document.querySelectorAll('input[type="checkbox"][data-id]');
+      const total = checkboxes.length;
+      const completed = Array.from(checkboxes).filter(cb => cb.checked).length;
+      const remaining = total - completed;
+      const percent = Math.round((completed / total) * 100);
+
+      document.getElementById('totalItems').textContent = total;
+      document.getElementById('completedItems').textContent = completed;
+      document.getElementById('remainingItems').textContent = remaining;
+
+      const bar = document.getElementById('progressBarInner');
+      bar.style.width = percent + '%';
+      document.getElementById('progressBarLabel').textContent = percent + '%';
+    }
+    // Load saved states
+    window.onload = function() {
+      for (let i = 0; i < TOTAL_ITEMS; i++) {
+        const checked = localStorage.getItem('kt_check_' + i) === 'true';
+        document.querySelector('input[data-id="' + i + '"]').checked = checked;
+      }
+      updateSummary();
+      updateMilestone();
+    };
+    document.querySelectorAll('input[type="checkbox"][data-id]').forEach(cb => {
+      cb.addEventListener('change', function() {
+        localStorage.setItem('kt_check_' + this.getAttribute('data-id'), this.checked);
+        updateSummary();
+        updateMilestone();
+      });
+    });
+
+    // --- Search Functionality ---
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+      const filter = this.value.toLowerCase();
+      const table = document.getElementById('ktTable');
+      const trs = table.getElementsByTagName('tr');
+      for (let i = 0; i < trs.length; i++) {
+        if (!trs[i].classList.contains('section-row')) {
+          let show = false;
+          const tds = trs[i].getElementsByTagName('td');
+          for (let j = 0; j < 3; j++) {
+            if (tds[j] && tds[j].textContent.toLowerCase().indexOf(filter) > -1) show = true;
+          }
+          trs[i].style.display = show ? '' : 'none';
+        }
+      }
+    });
+
+    // --- Milestone Celebration ---
+    function showMilestone(percent) {
+      const msg = document.getElementById('milestoneMsg');
+      msg.textContent = percent === 100
+        ? "🎉 Congratulations! 100% Complete! 🎉"
+        : "👏 Great job! 50% Complete!";
+      msg.style.display = 'block';
+      setTimeout(() => { msg.style.display = 'none'; }, 3500);
+    }
+    function showConfetti() {
+      const confettiContainer = document.getElementById('confetti');
+      for (let i = 0; i < 30; i++) {
+        const conf = document.createElement('span');
+        conf.className = 'confetti-piece';
+        conf.textContent = ['🎉','✨','🎊','🥳','⭐','💫'][Math.floor(Math.random()*6)];
+        conf.style.left = Math.random() * 100 + 'vw';
+        conf.style.animationDelay = (Math.random() * 0.7) + 's';
+        confettiContainer.appendChild(conf);
+        setTimeout(() => conf.remove(), 1500);
+      }
+    }
+
+    // --- Action Buttons ---
+    document.getElementById('saveBtn').addEventListener('click', function() {
+      // Save is automatic, but you can show a message
+      alert('Progress saved!');
+    });
+    document.getElementById('resetBtn').addEventListener('click', function() {
+      if (confirm('Are you sure you want to reset all progress?')) {
+        for (let i = 0; i < TOTAL_ITEMS; i++) {
+          localStorage.removeItem('kt_check_' + i);
+          document.querySelector('input[data-id="' + i + '"]').checked = false;
+        }
+        updateSummary();
+      }
+    });
+    document.getElementById('exportBtn').addEventListener('click', function() {
+      // Export checklist to CSV
+      let csv = 'Section,Subsection,Checklist Item,Done\n';
+      const rows = document.querySelectorAll('#ktTable tbody tr');
+      let currentSection = '', currentSubsection = '';
+      rows.forEach(row => {
+        if (row.classList.contains('section-row')) {
+          currentSection = row.cells[0].textContent.trim();
+        } else {
+          const cells = row.getElementsByTagName('td');
+          if (cells.length >= 4) {
+            const section = currentSection;
+            const subsection = cells[1].textContent.trim();
+            const item = cells[2].textContent.trim();
+            const done = cells[3].querySelector('input[type="checkbox"]').checked ? 'Yes' : 'No';
+            csv += `"${section}","${subsection}","${item}","${done}"\n`;
+          }
+        }
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'kt_checklist_export.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>
