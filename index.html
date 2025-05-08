@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>KT Roadmap Checklist</title>
+  <title>JHP KT Roadmap : Mastech Support</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     :root {
@@ -29,25 +29,6 @@
       padding: 30px 0;
       transition: background 0.3s, color 0.3s;
     }
-
-body.dark #searchInput,
-body.dark #searchInput:focus,
-body.dark #searchInput:hover {
-  background: #282d33 !important;
-  color: #ffe066 !important;
-  border: 1px solid #444 !important;
-}
-
-body.dark .summary-title,
-body.dark .summary-value {
-  color: #ffe066 !important;
-}
-body.dark tr:hover td {
-  background-color: #333 !important;   /* or another dark shade */
-  color: #ffe066 !important;           /* or #fff for white text */
-  transition: background 0.2s, color 0.2s;
-}
-
     .container {
       max-width: 1100px;
       margin: 0 auto;
@@ -191,7 +172,11 @@ body.dark tr:hover td {
       align-items: center;
       justify-content: center;
     }
-    /* Checklist Table */
+    /* Responsive Table */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+    }
     table {
       width: 100%;
       border-collapse: separate;
@@ -200,6 +185,7 @@ body.dark tr:hover td {
       border-radius: 16px;
       overflow: hidden;
       box-shadow: 0 2px 8px rgba(60,60,100,0.06);
+      min-width: 600px;
     }
     th, td {
       padding: 14px 12px;
@@ -232,7 +218,8 @@ body.dark tr:hover td {
     }
     tr:not(.section-row):not(.subsection-row):hover td {
       background: #f9fafb;
-      transition: background 0.2s;
+      color: var(--text);
+      transition: background 0.2s, color 0.2s;
     }
     .check-cell {
       text-align: center;
@@ -264,6 +251,7 @@ body.dark tr:hover td {
       transition: background 0.2s, box-shadow 0.2s;
       box-shadow: 0 2px 6px rgba(60,60,100,0.08);
       outline: none;
+      min-width: 120px;
     }
     .btn-blue { background: var(--btn-blue);}
     .btn-blue:hover { background: #2179b8;}
@@ -314,15 +302,78 @@ body.dark tr:hover td {
       0% { opacity: 1; transform: translateY(-40px) rotate(0deg);}
       100% { opacity: 0; transform: translateY(100vh) rotate(360deg);}
     }
+    /* Mobile Responsive */
+    @media (max-width: 900px) {
+      .container {
+        padding: 8px;
+        max-width: 100vw;
+      }
+      .theme-toggle {
+        position: static;
+        margin-bottom: 10px;
+        justify-content: flex-end;
+      }
+      .summary-cards {
+        flex-direction: column;
+        gap: 8px;
+      }
+      .button-bar {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .date-bar {
+        font-size: 0.95em;
+        text-align: left;
+        margin-bottom: 6px;
+      }
+      h1 {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+      }
+      .search-bar {
+        max-width: 100%;
+        margin: 0 0 10px 0;
+        padding: 0 4px;
+      }
+      #searchInput {
+        font-size: 1em;
+        padding: 10px 8px;
+      }
+      .summary-card {
+        min-width: 0;
+        padding: 12px 0 6px 0;
+        font-size: 0.98em;
+      }
+      .progress-bar-outer {
+        height: 20px;
+        margin-bottom: 8px;
+      }
+    }
     @media (max-width: 700px) {
-      .container { padding: 8px; }
-      table, thead, tbody, th, td, tr { display: block; }
-      th, td { width: 100%; box-sizing: border-box; }
-      tr { margin-bottom: 10px; }
-      th { border-radius: 0; }
-      .theme-toggle { position: static; margin-bottom: 10px; }
-      .summary-cards { flex-direction: column; gap: 8px;}
-      .button-bar { flex-direction: column; gap: 10px;}
+      .table-responsive {
+        margin: 0 -8px;
+      }
+      table, thead, tbody, th, td, tr {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      th, td {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 6px;
+        font-size: 1em;
+      }
+      tr {
+        margin-bottom: 10px;
+      }
+      th {
+        border-radius: 0;
+      }
+      .check-cell {
+        text-align: left;
+        margin-top: 4px;
+      }
     }
     /* Dark mode styles */
     body.dark {
@@ -342,14 +393,26 @@ body.dark tr:hover td {
       color: #ffe066;
       border: 2px solid #ffe066;
     }
-    body.dark #searchInput {
-      background: #23272a;
-      color: #ffe066;
-      border: 1px solid #444;
+    body.dark #searchInput,
+    body.dark #searchInput:focus,
+    body.dark #searchInput:hover {
+      background: #282d33 !important;
+      color: #ffe066 !important;
+      border: 1px solid #444 !important;
     }
     body.dark .summary-card {
       background: #22282a;
       color: #ffe066;
+    }
+    body.dark .summary-title,
+    body.dark .summary-value {
+      color: #ffe066 !important;
+    }
+    body.dark tr:hover td,
+    body.dark #ktTable tr:hover td {
+      background-color: #333 !important;
+      color: #ffe066 !important;
+      transition: background 0.2s, color 0.2s;
     }
   </style>
 </head>
@@ -370,7 +433,6 @@ body.dark tr:hover td {
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Search checklist...">
     </div>
-
     <!-- Summary and Progress Bar -->
     <div class="summary-progress-container">
       <div class="summary-cards">
@@ -393,12 +455,12 @@ body.dark tr:hover td {
         </div>
       </div>
     </div>
-
     <!-- Milestone Message -->
     <div class="milestone" id="milestoneMsg"></div>
     <!-- Confetti Container -->
     <div class="confetti" id="confetti"></div>
-    <!-- Checklist Table -->
+    <!-- Responsive Table Wrapper -->
+    <div class="table-responsive">
     <table id="ktTable">
       <thead>
         <tr>
@@ -414,7 +476,7 @@ body.dark tr:hover td {
         <tr>
           <td></td>
           <td>Queue Monitoring</td>
-          <td>Regularly check Failure Queue for failed jobs and take action</td>
+          <td>Regularly check Failure Queue for failed jobs and take appropriate action</td>
           <td class="check-cell"><input type="checkbox" data-id="0"></td>
         </tr>
         <tr>
@@ -537,7 +599,7 @@ body.dark tr:hover td {
           <td>Make workflow Active/Inactive as required</td>
           <td class="check-cell"><input type="checkbox" data-id="19"></td>
         </tr>
- <tr>
+        <tr>
           <td></td>
           <td>Job Control</td>
           <td>How to execute/cancel the workflow</td>
@@ -547,32 +609,31 @@ body.dark tr:hover td {
           <td></td>
           <td>Scheduling</td>
           <td>Check workflow schedule times</td>
-          <td class="check-cell"><input type="checkbox" data-id="20"></td>
+          <td class="check-cell"><input type="checkbox" data-id="21"></td>
         </tr>
-        
         <!-- Additional Resources & Best Practices -->
         <tr class="section-row"><td>Additional Resources & Best Practices</td><td></td><td></td><td></td></tr>
         <tr>
           <td></td>
           <td>Documentation</td>
           <td>Maintain updated documentation for all processes</td>
-          <td class="check-cell"><input type="checkbox" data-id="21"></td>
+          <td class="check-cell"><input type="checkbox" data-id="22"></td>
         </tr>
         <tr>
           <td></td>
           <td>Training</td>
           <td>Conduct regular knowledge sharing and training sessions</td>
-          <td class="check-cell"><input type="checkbox" data-id="22"></td>
+          <td class="check-cell"><input type="checkbox" data-id="23"></td>
         </tr>
         <tr>
           <td></td>
           <td>Escalation Matrix</td>
           <td>Maintain escalation matrix with contacts and escalation paths</td>
-          <td class="check-cell"><input type="checkbox" data-id="23"></td>
+          <td class="check-cell"><input type="checkbox" data-id="24"></td>
         </tr>
       </tbody>
     </table>
-
+    </div>
     <!-- Action Buttons -->
     <div class="button-bar">
       <button class="action-btn btn-blue" id="saveBtn">Save Progress</button>
@@ -582,8 +643,8 @@ body.dark tr:hover td {
   </div>
   <script>
     // --- Date Bar ---
-   // document.getElementById('dateBar').textContent =
-     // 'Thursday, May 08, 2025, 2:05 PM IST';
+    //document.getElementById('dateBar').textContent =
+      //'Thursday, May 08, 2025, 5:26 PM IST';
 
     // --- Dark/Light Mode Toggle ---
     const themeSwitch = document.getElementById('themeSwitch');
@@ -596,7 +657,7 @@ body.dark tr:hover td {
       } else {
         document.body.classList.remove('dark');
         themeSwitch.checked = false;
-        themeLabel.textContent = '🌞 ';
+        themeLabel.textContent = '🌞';
       }
     }
     themeSwitch.addEventListener('change', function() {
@@ -611,7 +672,7 @@ body.dark tr:hover td {
     setTheme(localStorage.getItem('theme') || 'light');
 
     // --- Checklist State ---
-    const TOTAL_ITEMS = 24;
+    const TOTAL_ITEMS = 25;
     function updateMilestone() {
       const completed = Array.from(document.querySelectorAll('input[type="checkbox"][data-id]'))
         .filter(cb => cb.checked).length;
@@ -640,7 +701,8 @@ body.dark tr:hover td {
     window.onload = function() {
       for (let i = 0; i < TOTAL_ITEMS; i++) {
         const checked = localStorage.getItem('kt_check_' + i) === 'true';
-        document.querySelector('input[data-id="' + i + '"]').checked = checked;
+        const cb = document.querySelector('input[data-id="' + i + '"]');
+        if (cb) cb.checked = checked;
       }
       updateSummary();
       updateMilestone();
@@ -658,8 +720,12 @@ body.dark tr:hover td {
       const filter = this.value.toLowerCase();
       const table = document.getElementById('ktTable');
       const trs = table.getElementsByTagName('tr');
+      let currentSection = '';
       for (let i = 0; i < trs.length; i++) {
-        if (!trs[i].classList.contains('section-row')) {
+        if (trs[i].classList.contains('section-row')) {
+          currentSection = trs[i].cells[0].textContent.trim();
+          trs[i].style.display = '';
+        } else {
           let show = false;
           const tds = trs[i].getElementsByTagName('td');
           for (let j = 0; j < 3; j++) {
@@ -701,7 +767,8 @@ body.dark tr:hover td {
       if (confirm('Are you sure you want to reset all progress?')) {
         for (let i = 0; i < TOTAL_ITEMS; i++) {
           localStorage.removeItem('kt_check_' + i);
-          document.querySelector('input[data-id="' + i + '"]').checked = false;
+          const cb = document.querySelector('input[data-id="' + i + '"]');
+          if (cb) cb.checked = false;
         }
         updateSummary();
       }
@@ -710,7 +777,7 @@ body.dark tr:hover td {
       // Export checklist to CSV
       let csv = 'Section,Subsection,Checklist Item,Done\n';
       const rows = document.querySelectorAll('#ktTable tbody tr');
-      let currentSection = '', currentSubsection = '';
+      let currentSection = '';
       rows.forEach(row => {
         if (row.classList.contains('section-row')) {
           currentSection = row.cells[0].textContent.trim();
